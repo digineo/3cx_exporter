@@ -8,8 +8,7 @@ import (
 )
 
 func parseConfig(path string) (*exporter.API, error) {
-
-	data, err := ioutil.ReadFile("fixtures/config.json")
+	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
