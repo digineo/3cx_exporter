@@ -1,0 +1,110 @@
+[
+    {
+       "Name":"3CXCfgServ01",
+       "DisplayName":"3CX PhoneSystem 01 Configuration Server",
+       "Status":4,
+       "MemoryUsed":3936256,
+       "CpuUsage":0,
+       "startStopEnabled":false,
+       "restartEnabled":true
+    },
+    {
+       "Name":"3CXIVR01",
+       "DisplayName":"3CX PhoneSystem 01 IVR Server",
+       "Status":4,
+       "MemoryUsed":26652672,
+       "CpuUsage":0,
+       "startStopEnabled":true,
+       "restartEnabled":true
+    },
+    {
+       "Name":"3CXMediaServer",
+       "DisplayName":"3CX PhoneSystem Media Server",
+       "Status":4,
+       "MemoryUsed":6385664,
+       "CpuUsage":0,
+       "startStopEnabled":true,
+       "restartEnabled":true
+    },
+    {
+       "Name":"3CXPhoneSystem01",
+       "DisplayName":"3CX PhoneSystem 01 SIP Server",
+       "Status":4,
+       "MemoryUsed":12525568,
+       "CpuUsage":0,
+       "startStopEnabled":true,
+       "restartEnabled":true
+    },
+    {
+       "Name":"3CXPhoneSystemMC01",
+       "DisplayName":"3CX PhoneSystem 01 Management Console",
+       "Status":4,
+       "MemoryUsed":175378432,
+       "CpuUsage":0,
+       "startStopEnabled":false,
+       "restartEnabled":true
+    },
+    {
+       "Name":"3CXQueueManager01",
+       "DisplayName":"3CX PhoneSystem 01 Queue Manager Server",
+       "Status":4,
+       "MemoryUsed":26570752,
+       "CpuUsage":0,
+       "startStopEnabled":true,
+       "restartEnabled":true
+    },
+    {
+       "Name":"3CXSystemService01",
+       "DisplayName":"3CX PhoneSystem 01 System Server",
+       "Status":3,
+       "MemoryUsed":0,
+       "CpuUsage":0,
+       "startStopEnabled":true,
+       "restartEnabled":true
+    },
+    {
+       "Name":"3CXTunnel01",
+       "DisplayName":"3CX PhoneSystem 01 SIP/RTP Tunneling Proxy",
+       "Status":4,
+       "MemoryUsed":2134016,
+       "CpuUsage":0,
+       "startStopEnabled":true,
+       "restartEnabled":true
+    },
+    {
+       "Name":"3CXAudioProvider01",
+       "DisplayName":"3CX PhoneSystem 01 Audio Provider",
+       "Status":4,
+       "MemoryUsed":581632,
+       "CpuUsage":0,
+       "startStopEnabled":true,
+       "restartEnabled":true
+    },
+    {
+       "Name":"3CXEventNotificationManager",
+       "DisplayName":"3CX Event Notification Manager",
+       "Status":4,
+       "MemoryUsed":21286912,
+       "CpuUsage":0,
+       "startStopEnabled":true,
+       "restartEnabled":true
+    },
+    {
+       "Name":"nginx",
+       "DisplayName":"3CX PhoneSystem Nginx Server",
+       "Status":4,
+       "MemoryUsed":4395008,
+       "CpuUsage":0,
+       "startStopEnabled":false,
+       "restartEnabled":true
+    },
+    {
+       "Name":"postgresql",
+       "DisplayName":"3CX PhoneSystem Database Server",
+       "Status":4,
+       "MemoryUsed":34770944,
+       "CpuUsage":0,
+       "startStopEnabled":false,
+       "restartEnabled":true
+    }
+ ]

@@ -17,6 +17,10 @@ var (
 	backupAgeDesc            = prometheus.NewDesc(prefix+"backup_age", "Age of last backup in seconds", nil, nil)
 	maintenanceRemainingDesc = prometheus.NewDesc(prefix+"maintenance_remaining", "Remaining time of maintenance in seconds", nil, nil)
 
+	serviceStatusDesc = prometheus.NewDesc(prefix+"service_status", "Status of service", []string{"name"}, nil)
+	serviceCPUDesc    = prometheus.NewDesc(prefix+"service_cpu", "CPU usage of service", []string{"name"}, nil)
+	serviceMemoryDesc = prometheus.NewDesc(prefix+"service_memory", "Memory usage of service", []string{"name"}, nil)
+
 	trunkRegisteredDesc = prometheus.NewDesc(prefix+"trunk_registered", "Status of trunk", []string{"name"}, nil)
 )
 
@@ -31,6 +35,11 @@ func (ex *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- extensionsRegisteredDesc
 	ch <- backupAgeDesc
 	ch <- maintenanceRemainingDesc
+
+	ch <- serviceStatusDesc
+	ch <- serviceCPUDesc
+	ch <- serviceMemoryDesc
+
 	ch <- trunkRegisteredDesc
 }
 
@@ -57,6 +66,20 @@ func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 			maintenanceRemaining = float64(t.Sub(now)) / float64(time.Second)
 		}
 		ch <- prometheus.MustNewConstMetric(maintenanceRemainingDesc, prometheus.CounterValue, maintenanceRemaining)
+	} else {
+		log.Println(err)
+	}
+
+	services, err := ex.API.ServiceList()
+	if err == nil {
+		for i := range services {
+			service := services[i]
+			labels := []string{service.Name}
+
+			ch <- prometheus.MustNewConstMetric(serviceStatusDesc, prometheus.GaugeValue, float64(service.Status), labels...)
+			ch <- prometheus.MustNewConstMetric(serviceCPUDesc, prometheus.GaugeValue, float64(service.CPUUsage), labels...)
+			ch <- prometheus.MustNewConstMetric(serviceMemoryDesc, prometheus.GaugeValue, float64(service.MemoryUsed), labels...)
+		}
 	} else {
 		log.Println(err)
 	}
