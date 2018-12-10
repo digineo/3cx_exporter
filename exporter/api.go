@@ -48,33 +48,16 @@ func (api *API) Login() error {
 	return nil
 }
 
-func (api *API) SystemStatus() (*SystemStatus, error) {
-	resp, err := api.client.Get(api.buildURI("SystemStatus"))
-	if err != nil {
-		return nil, err
-	}
-	status := SystemStatus{}
-	return &status, json.NewDecoder(resp.Body).Decode(&status)
-}
-
-func (api *API) TrunkList() ([]Trunk, error) {
-	resp, err := api.client.Get(api.buildURI("TrunkList"))
-	if err != nil {
-		return nil, err
-	}
-
-	trunkList := struct {
-		List []Trunk `json:"list"`
-	}{}
-
-	err = json.NewDecoder(resp.Body).Decode(&trunkList)
-	if err != nil {
-		return nil, err
-	}
-
-	return trunkList.List, nil
-}
-
 func (api *API) buildURI(path string) string {
 	return fmt.Sprintf("https://%s/api/%s", api.Hostname, path)
+}
+
+// getResponse does a GET request and parses the response
+func (api *API) getResponse(path string, response interface{}) error {
+	resp, err := api.client.Get(api.buildURI(path))
+	if err != nil {
+		return err
+	}
+
+	return json.NewDecoder(resp.Body).Decode(response)
 }

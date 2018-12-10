@@ -1,7 +1,10 @@
 package exporter
 
-import "time"
+import (
+	"time"
+)
 
+// SystemStatus represents the SystemStatus response
 type SystemStatus struct {
 	FQDN                            string      `json:"FQDN"`
 	Version                         string      `json:"Version"`
@@ -39,4 +42,9 @@ type SystemStatus struct {
 	ResellerName                    string      `json:"ResellerName"`
 	LicenseKey                      string      `json:"LicenseKey"`
 	ProductCode                     string      `json:"ProductCode"`
+}
+
+func (api *API) SystemStatus() (SystemStatus, error) {
+	response := SystemStatus{}
+	return response, api.getResponse("SystemStatus", &response)
 }

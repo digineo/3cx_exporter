@@ -1,6 +1,8 @@
 package exporter
 
-import "time"
+import (
+	"time"
+)
 
 type Trunk struct {
 	ID                 string     `json:"Id"`
@@ -15,4 +17,17 @@ type Trunk struct {
 	RegisterSentTime   *time.Time `json:"RegisterSentTime"`
 	RegisterFailedTime *time.Time `json:"RegisterFailedTime"`
 	CanBeDeleted       bool       `json:"CanBeDeleted"`
+}
+
+func (api *API) TrunkList() ([]Trunk, error) {
+	response := struct {
+		List []Trunk `json:"list"`
+	}{}
+
+	err := api.getResponse("TrunkList", &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response.List, nil
 }
