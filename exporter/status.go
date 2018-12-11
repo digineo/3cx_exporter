@@ -44,6 +44,7 @@ type SystemStatus struct {
 	ProductCode                     string      `json:"ProductCode"`
 }
 
+// SystemStatus fetches the system status
 func (api *API) SystemStatus() (SystemStatus, error) {
 	response := SystemStatus{}
 	return response, api.getResponse("SystemStatus", &response)

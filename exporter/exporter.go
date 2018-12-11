@@ -28,6 +28,7 @@ type Exporter struct {
 	API
 }
 
+// Describe describes the metrics
 func (ex *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- blacklistSizeDesc
 	ch <- callsActiveDesc
@@ -43,6 +44,7 @@ func (ex *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- trunkRegisteredDesc
 }
 
+// Collect collects the metrics
 func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 	now := time.Now()
 

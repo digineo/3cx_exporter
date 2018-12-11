@@ -20,6 +20,7 @@ type API struct {
 	client   *http.Client
 }
 
+// Login creates a user session
 func (api *API) Login() error {
 	jar, _ := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
 	client := &http.Client{Jar: jar}
@@ -57,7 +58,7 @@ func (api *API) buildURI(path string) string {
 	return fmt.Sprintf("https://%s/api/%s", api.Hostname, path)
 }
 
-// getResponse does a GET request and parses the response
+// getResponse does a GET request and parses the JSON response
 func (api *API) getResponse(path string, response interface{}) error {
 	resp, err := api.client.Get(api.buildURI(path))
 	if err != nil {
@@ -71,5 +72,6 @@ func (api *API) getResponse(path string, response interface{}) error {
 	if contentType := resp.Header.Get("Content-Type"); !strings.HasPrefix(contentType, "application/json") {
 		return fmt.Errorf("unexpected content-type: %s", contentType)
 	}
+
 	return json.NewDecoder(resp.Body).Decode(response)
 }

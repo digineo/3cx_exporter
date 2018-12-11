@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// Trunk represents a SIP trunk
 type Trunk struct {
 	ID                 string     `json:"Id"`
 	Number             string     `json:"Number"`
@@ -19,6 +20,7 @@ type Trunk struct {
 	CanBeDeleted       bool       `json:"CanBeDeleted"`
 }
 
+// TrunkList fetches the trunk list
 func (api *API) TrunkList() ([]Trunk, error) {
 	response := struct {
 		List []Trunk `json:"list"`

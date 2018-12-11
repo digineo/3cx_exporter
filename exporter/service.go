@@ -14,6 +14,7 @@ type Service struct {
 	RestartEnabled   bool   `json:"restartEnabled"`
 }
 
+// ServiceList fetches the service list
 func (api *API) ServiceList() (ServiceList, error) {
 	response := ServiceList{}
 	return response, api.getResponse("ServiceList", &response)
