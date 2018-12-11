@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/cookiejar"
+	"strings"
 
 	"golang.org/x/net/publicsuffix"
 )
@@ -35,6 +36,10 @@ func (api *API) Login() error {
 		return err
 	}
 
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
@@ -59,5 +64,12 @@ func (api *API) getResponse(path string, response interface{}) error {
 		return err
 	}
 
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+
+	if contentType := resp.Header.Get("Content-Type"); !strings.HasPrefix(contentType, "application/json") {
+		return fmt.Errorf("unexpected content-type: %s", contentType)
+	}
 	return json.NewDecoder(resp.Body).Decode(response)
 }
