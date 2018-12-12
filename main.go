@@ -12,7 +12,7 @@ import (
 
 func main() {
 	config := flag.String("config", "config.json", "Path to config file")
-	listen := flag.String("listen", ":8080", "Listening on")
+	listen := flag.String("listen", ":9523", "Listening on")
 	flag.Parse()
 
 	api, err := parseConfig(*config)
