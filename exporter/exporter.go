@@ -25,6 +25,7 @@ var (
 	trunkRegisteredDesc = prometheus.NewDesc(prefix+"trunk_registered", "Status of trunk", []string{"name"}, nil)
 )
 
+// Exporter represents a prometheus exporter
 type Exporter struct {
 	API
 }
