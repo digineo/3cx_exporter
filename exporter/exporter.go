@@ -12,6 +12,7 @@ const prefix = "pbx_"
 var (
 	blacklistSizeDesc        = prometheus.NewDesc(prefix+"blacklist_size", "Number of blacklisted IP addresses", nil, nil)
 	callsActiveDesc          = prometheus.NewDesc(prefix+"calls_active", "Number of current active calls", nil, nil)
+	callsLimitDesc           = prometheus.NewDesc(prefix+"calls_limit", "Maximum number of supported simultaneous calls", nil, nil)
 	extensionsTotalDesc      = prometheus.NewDesc(prefix+"extensions_total", "Number of total extensions", nil, nil)
 	extensionsRegisteredDesc = prometheus.NewDesc(prefix+"extensions_registered", "Number of registered extensions", nil, nil)
 	backupAgeDesc            = prometheus.NewDesc(prefix+"backup_age", "Age of last backup in seconds", nil, nil)
@@ -32,6 +33,7 @@ type Exporter struct {
 func (ex *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- blacklistSizeDesc
 	ch <- callsActiveDesc
+	ch <- callsLimitDesc
 	ch <- extensionsTotalDesc
 	ch <- extensionsRegisteredDesc
 	ch <- backupAgeDesc
@@ -52,6 +54,7 @@ func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 	if err == nil {
 		ch <- prometheus.MustNewConstMetric(blacklistSizeDesc, prometheus.GaugeValue, float64(status.BlacklistedIPCount))
 		ch <- prometheus.MustNewConstMetric(callsActiveDesc, prometheus.GaugeValue, float64(status.CallsActive))
+		ch <- prometheus.MustNewConstMetric(callsLimitDesc, prometheus.GaugeValue, float64(status.MaxSimCalls))
 		ch <- prometheus.MustNewConstMetric(extensionsTotalDesc, prometheus.GaugeValue, float64(status.ExtensionsTotal))
 		ch <- prometheus.MustNewConstMetric(extensionsRegisteredDesc, prometheus.GaugeValue, float64(status.ExtensionsRegistered))
 
