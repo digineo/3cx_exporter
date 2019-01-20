@@ -5,15 +5,15 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestStatus(t *testing.T) {
-	assert := assert.New(t)
-	data, err := ioutil.ReadFile("fixtures/SystemStatus.json")
+	require := require.New(t)
 
-	assert.NoError(err)
+	data, err := ioutil.ReadFile("fixtures/SystemStatus.json")
+	require.NoError(err)
 
 	status := SystemStatus{}
-	assert.NoError(json.Unmarshal(data, &status))
+	require.NoError(json.Unmarshal(data, &status))
 }

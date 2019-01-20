@@ -1,0 +1,19 @@
+{
+    "list":[
+       {
+          "Id":"56",
+          "Number":"10001",
+          "Name":"SIP-Provider",
+          "Host":"sip.example.com",
+          "Type":"Provider",
+          "SimCalls":"10",
+          "ExternalNumber":"0123456789",
+          "IsRegistered":true,
+          "RegisterOkTime":"2019-01-20T04:02:35.0000000Z",
+          "RegisterSentTime":"2019-01-20T04:02:35.0000000Z",
+          "RegisterFailedTime":"",
+          "CanBeDeleted":true
+       }
+    ],
+    "isRefreshTrunksRegistrationProhibited":false
+ }

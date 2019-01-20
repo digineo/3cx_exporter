@@ -6,17 +6,19 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestServiceList(t *testing.T) {
 	assert := assert.New(t)
-	data, err := ioutil.ReadFile("fixtures/ServiceList.json")
+	require := require.New(t)
 
-	assert.NoError(err)
+	data, err := ioutil.ReadFile("fixtures/ServiceList.json")
+	require.NoError(err)
 
 	serviceList := ServiceList{}
-	assert.NoError(json.Unmarshal(data, &serviceList))
-	assert.Len(serviceList, 12)
+	require.NoError(json.Unmarshal(data, &serviceList))
+	require.Len(serviceList, 12)
 	assert.Equal("3CXCfgServ01", serviceList[0].Name)
 	assert.Equal(4, serviceList[0].Status)
 }
