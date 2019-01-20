@@ -19,6 +19,8 @@ func TestServiceList(t *testing.T) {
 	serviceList := ServiceList{}
 	require.NoError(json.Unmarshal(data, &serviceList))
 	require.Len(serviceList, 12)
-	assert.Equal("3CXCfgServ01", serviceList[0].Name)
-	assert.Equal(4, serviceList[0].Status)
+
+	service := serviceList[0]
+	assert.Equal("3CXCfgServ01", service.Name)
+	assert.Equal(4, service.Status)
 }

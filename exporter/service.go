@@ -5,13 +5,10 @@ type ServiceList []Service
 
 // Service represents an item of the ServiceList response
 type Service struct {
-	Name             string `json:"Name"`
-	DisplayName      string `json:"DisplayName"`
-	Status           int    `json:"Status"`
-	MemoryUsed       int    `json:"MemoryUsed"`
-	CPUUsage         int    `json:"CpuUsage"`
-	StartStopEnabled bool   `json:"startStopEnabled"`
-	RestartEnabled   bool   `json:"restartEnabled"`
+	Name       string
+	Status     int
+	MemoryUsed int
+	CPUUsage   int
 }
 
 // ServiceList fetches the service list
