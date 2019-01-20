@@ -69,7 +69,7 @@ func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 		}
 		ch <- prometheus.MustNewConstMetric(maintenanceRemainingDesc, prometheus.CounterValue, maintenanceRemaining)
 	} else {
-		log.Println(err)
+		log.Println("failed to fetch SystemStatus:", err)
 	}
 
 	services, err := ex.API.ServiceList()
@@ -83,7 +83,7 @@ func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 			ch <- prometheus.MustNewConstMetric(serviceMemoryDesc, prometheus.GaugeValue, float64(service.MemoryUsed), labels...)
 		}
 	} else {
-		log.Println(err)
+		log.Println("failed to fetch ServiceList:", err)
 	}
 
 	trunks, err := ex.API.TrunkList()
@@ -99,6 +99,6 @@ func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 			ch <- prometheus.MustNewConstMetric(trunkRegisteredDesc, prometheus.GaugeValue, float64(registered), labels...)
 		}
 	} else {
-		log.Println(err)
+		log.Println("failed to fetch TrunkList:", err)
 	}
 }
