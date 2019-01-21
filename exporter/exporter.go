@@ -52,6 +52,10 @@ func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 	now := time.Now()
 
 	status, err := ex.API.SystemStatus()
+	if err == ErrAuthentication {
+		log.Println("authentication failed:", err)
+		return
+	}
 	if err == nil {
 		ch <- prometheus.MustNewConstMetric(blacklistSizeDesc, prometheus.GaugeValue, float64(status.BlacklistedIPCount))
 		ch <- prometheus.MustNewConstMetric(callsActiveDesc, prometheus.GaugeValue, float64(status.CallsActive))
