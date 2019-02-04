@@ -2,7 +2,6 @@ package exporter
 
 import (
 	"log"
-	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -15,8 +14,8 @@ var (
 	callsLimitDesc           = prometheus.NewDesc(prefix+"calls_limit", "Maximum number of supported simultaneous calls", nil, nil)
 	extensionsTotalDesc      = prometheus.NewDesc(prefix+"extensions_total", "Number of total extensions", nil, nil)
 	extensionsRegisteredDesc = prometheus.NewDesc(prefix+"extensions_registered", "Number of registered extensions", nil, nil)
-	backupAgeDesc            = prometheus.NewDesc(prefix+"backup_age", "Age of last backup in seconds", nil, nil)
-	maintenanceRemainingDesc = prometheus.NewDesc(prefix+"maintenance_remaining", "Remaining time of maintenance in seconds", nil, nil)
+	lastBackupDesc           = prometheus.NewDesc(prefix+"last_backup", "Timestamp of last backup", nil, nil)
+	maintenanceUntilDesc     = prometheus.NewDesc(prefix+"maintenance_until", "Expiration timestamp of the maintenance", nil, nil)
 
 	serviceStatusDesc = prometheus.NewDesc(prefix+"service_status", "Status of service", []string{"name"}, nil)
 	serviceCPUDesc    = prometheus.NewDesc(prefix+"service_cpu", "CPU usage of service", []string{"name"}, nil)
@@ -37,8 +36,8 @@ func (ex *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- callsLimitDesc
 	ch <- extensionsTotalDesc
 	ch <- extensionsRegisteredDesc
-	ch <- backupAgeDesc
-	ch <- maintenanceRemainingDesc
+	ch <- lastBackupDesc
+	ch <- maintenanceUntilDesc
 
 	ch <- serviceStatusDesc
 	ch <- serviceCPUDesc
@@ -49,8 +48,6 @@ func (ex *Exporter) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect collects the metrics
 func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
-	now := time.Now()
-
 	status, err := ex.API.SystemStatus()
 	if err == ErrAuthentication {
 		log.Println("authentication failed:", err)
@@ -63,19 +60,19 @@ func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 		ch <- prometheus.MustNewConstMetric(extensionsTotalDesc, prometheus.GaugeValue, float64(status.ExtensionsTotal))
 		ch <- prometheus.MustNewConstMetric(extensionsRegisteredDesc, prometheus.GaugeValue, float64(status.ExtensionsRegistered))
 
-		// seconds since last backup
-		backupAgo := float64(-1)
+		// timestamp of last backup
+		lastBackup := float64(-1)
 		if t := status.LastBackupDateTime; t != nil {
-			backupAgo = float64(now.Sub(*t)) / float64(time.Second)
+			lastBackup = float64(t.Unix())
 		}
-		ch <- prometheus.MustNewConstMetric(backupAgeDesc, prometheus.CounterValue, backupAgo)
+		ch <- prometheus.MustNewConstMetric(lastBackupDesc, prometheus.CounterValue, lastBackup)
 
-		// remaining time of maintenance
-		maintenanceRemaining := float64(-1)
+		// expiration timestamp of maintenance
+		maintenanteExpires := float64(-1)
 		if t := status.MaintenanceExpiresAt; t != nil {
-			maintenanceRemaining = float64(t.Sub(now)) / float64(time.Second)
+			maintenanteExpires = float64(t.Unix())
 		}
-		ch <- prometheus.MustNewConstMetric(maintenanceRemainingDesc, prometheus.CounterValue, maintenanceRemaining)
+		ch <- prometheus.MustNewConstMetric(maintenanceUntilDesc, prometheus.CounterValue, maintenanteExpires)
 	} else {
 		log.Println("failed to fetch SystemStatus:", err)
 	}
