@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"net/http"
 	"os"
 	"os/signal"
@@ -14,21 +13,19 @@ import (
 )
 
 func main() {
-	config := flag.String("config", "config.json", "Path to config file")
-	listen := flag.String("listen", ":9523", "Listening on")
-	flag.Parse()
 
-	api, err := parseConfig(*config)
+	conf, err := parseConfig()
 	if err != nil {
 		panic(err)
 	}
+	api := &exporter.API{Hostname: conf.Host, Username: conf.Username, Password: conf.Password}
 	if err := api.Login(); err != nil {
 		panic(err)
 	}
 	//Ragister metrics
 	prometheus.MustRegister(&exporter.Exporter{API: *api})
 	srv := &http.Server{
-		Addr: *listen,
+		Addr: conf.AppPort,
 	}
 	http.Handle("/metrics", promhttp.Handler())
 
