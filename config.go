@@ -8,10 +8,11 @@ import (
 )
 
 const (
-	CTX_HOST string = "CTX_HOST"
-	USERNAME string = "USERNAME"
-	PASSWORD string = "PASSWORD"
-	PORT     string = "PORT"
+	CTX_HOST  string = "CTX_HOST"
+	USERNAME  string = "USERNAME"
+	PASSWORD  string = "PASSWORD"
+	PORT      string = "PORT"
+	LOG_LEVEL string = "LOG_LEVEL"
 )
 
 type AppConfig struct {
@@ -19,6 +20,7 @@ type AppConfig struct {
 	Username string
 	Password string
 	AppPort  string
+	LogLevel string
 }
 
 func parseConfig() (conf AppConfig, err error) {
@@ -40,6 +42,10 @@ func parseConfig() (conf AppConfig, err error) {
 	conf.AppPort = os.Getenv(PORT)
 	if conf.AppPort == "" {
 		conf.AppPort = ":8080"
+	}
+	conf.LogLevel = os.Getenv(LOG_LEVEL)
+	if conf.LogLevel == "" {
+		conf.LogLevel = "INFO"
 	}
 	return conf, nil
 }

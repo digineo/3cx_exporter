@@ -1,9 +1,8 @@
 package exporter
 
 import (
-	"log"
-
 	"github.com/prometheus/client_golang/prometheus"
+	"go.uber.org/zap"
 )
 
 const prefix = "pbx_"
@@ -27,6 +26,7 @@ var (
 // Exporter represents a prometheus exporter
 type Exporter struct {
 	API
+	Logger *zap.Logger
 }
 
 // Describe describes the metrics
@@ -48,9 +48,10 @@ func (ex *Exporter) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect collects the metrics
 func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
+	ex.Logger.Debug("Stating collec metrics")
 	status, err := ex.API.SystemStatus()
 	if err == ErrAuthentication {
-		log.Println("authentication failed:", err)
+		ex.Logger.Error("Citrix authentification failed")
 		return
 	}
 	if err == nil {
@@ -74,7 +75,8 @@ func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 		}
 		ch <- prometheus.MustNewConstMetric(maintenanceUntilDesc, prometheus.CounterValue, maintenanteExpires)
 	} else {
-		log.Println("failed to fetch SystemStatus:", err)
+
+		ex.Logger.Error("failed to fetch SystemStatus:", zap.Error(err))
 	}
 
 	services, err := ex.API.ServiceList()
@@ -88,7 +90,8 @@ func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 			ch <- prometheus.MustNewConstMetric(serviceMemoryDesc, prometheus.GaugeValue, float64(service.MemoryUsed), labels...)
 		}
 	} else {
-		log.Println("failed to fetch ServiceList:", err)
+		ex.Logger.Error("failed to fetch SystemList:", zap.Error(err))
+
 	}
 
 	trunks, err := ex.API.TrunkList()
@@ -104,6 +107,6 @@ func (ex *Exporter) Collect(ch chan<- prometheus.Metric) {
 			ch <- prometheus.MustNewConstMetric(trunkRegisteredDesc, prometheus.GaugeValue, float64(registered), labels...)
 		}
 	} else {
-		log.Println("failed to fetch TrunkList:", err)
+		ex.Logger.Error("failed to fetch TrunkList:", zap.Error(err))
 	}
 }

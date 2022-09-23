@@ -10,6 +10,7 @@ import (
 	"github.com/digineo/3cx_exporter/exporter"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -18,12 +19,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	InitLogger(conf.LogLevel)
 	api := &exporter.API{Hostname: conf.Host, Username: conf.Username, Password: conf.Password}
 	if err := api.Login(); err != nil {
-		panic(err)
+		Logger.Panic("Citrix login error", zap.Error(err))
 	}
 	//Ragister metrics
-	prometheus.MustRegister(&exporter.Exporter{API: *api})
+	prometheus.MustRegister(&exporter.Exporter{API: *api, Logger: Logger})
 	srv := &http.Server{
 		Addr: conf.AppPort,
 	}
@@ -31,7 +33,7 @@ func main() {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
-			panic(err)
+			Logger.Panic("Handle server error", zap.Error(err))
 		}
 	}()
 
@@ -39,8 +41,10 @@ func main() {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	<-c
+	Logger.Info("App Interrputtes. Waiting for graseful shutdown")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
 	srv.Shutdown(ctx)
+	Logger.Info("Http server stopped")
 	os.Exit(0)
 }
