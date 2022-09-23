@@ -18,7 +18,7 @@ type API struct {
 	Hostname string
 	Username string
 	Password string
-	client   *http.Client
+	Client   *http.Client
 }
 
 // ErrAuthentication is returned on HTTP status 401
@@ -55,7 +55,7 @@ func (api *API) Login() error {
 		return fmt.Errorf("failed to login: %s", respBody)
 	}
 
-	api.client = client
+	api.Client = client
 	return nil
 }
 
@@ -68,7 +68,7 @@ func (api *API) getResponse(path string, response interface{}) error {
 	retried := false
 
 request:
-	resp, err := api.client.Get(api.buildURI(path))
+	resp, err := api.Client.Get(api.buildURI(path))
 	if err != nil {
 		return err
 	}

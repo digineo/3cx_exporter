@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -20,9 +21,9 @@ func main() {
 		panic(err)
 	}
 	InitLogger(conf.LogLevel)
-	api := &exporter.API{Hostname: conf.Host, Username: conf.Username, Password: conf.Password}
+	api := &exporter.API{Hostname: conf.Host, Username: conf.Username, Password: conf.Password, Client: &http.Client{}}
 	if err := api.Login(); err != nil {
-		Logger.Panic("Citrix login error", zap.Error(err))
+		Logger.Error("Citrix login error", zap.Error(err))
 	}
 	//Ragister metrics
 	prometheus.MustRegister(&exporter.Exporter{API: *api, Logger: Logger})
@@ -32,6 +33,7 @@ func main() {
 	http.Handle("/metrics", promhttp.Handler())
 
 	go func() {
+		Logger.Info(fmt.Sprintf("Listen started on port %s", conf.AppPort))
 		if err := srv.ListenAndServe(); err != nil {
 			Logger.Panic("Handle server error", zap.Error(err))
 		}
