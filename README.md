@@ -32,7 +32,7 @@ After=network.target
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/bin/3cx_exporter -config /etc/3cx_exporter/config.json
+ExecStart=/usr/bin/3cx_exporter -config /etc/3cx_exporter/config.json -log_level=INFO -listen=8080
 ```
 
 ## License

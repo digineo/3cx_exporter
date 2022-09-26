@@ -14,7 +14,8 @@
         "env": {
           "ENV": "DEV"
         },
-        "showLog": true
+        "showLog": true,
+        "args": ["-config","fixtures/config.json","-listen",":8080","-log_level","DEBUG"]
       },
     ]
 }
