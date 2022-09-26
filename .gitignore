@@ -27,9 +27,11 @@ go.work
 ### Go Patch ###
 /vendor/
 /Godeps/
+/bin/
 
 # End of https://www.toptal.com/developers/gitignore/api/go
 main
 app
+
 
 __debug_bin 

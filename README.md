@@ -21,8 +21,11 @@ Example:
 
 ## Usage Example
 
-Move binary to `/usr/bin/` and create config file at `/etc/3cx_exporter/config.json`.
-Create following systemd service unit at /etc/systemd/system/3cx_exporter.service:
+1. Download lastest release curl -o /usr/bin/ https://github.com/tarkmote-ou/3cx_exporter/releases/download/v1.0/3cx-explorer-amd64-linux-1.0 
+
+2. Create config file at `/etc/3cx_exporter/config.json`.
+
+3. Create following systemd service unit at /etc/systemd/system/3cx_exporter.service:
 
 ```
 [Unit]
