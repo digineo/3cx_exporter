@@ -31,3 +31,5 @@ go.work
 # End of https://www.toptal.com/developers/gitignore/api/go
 main
 app
+
+__debug_bin 
