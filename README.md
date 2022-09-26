@@ -21,7 +21,8 @@ Example:
 
 ## Usage Example
 
-1. Download lastest release curl -o /usr/bin/ https://github.com/tarkmote-ou/3cx_exporter/releases/download/v1.0/3cx-explorer-amd64-linux-1.0 
+1. Download lastest release 
+   sudo curl -o /usr/bin/3cx-exporter https://github.com/tarkmote-ou/3cx_exporter/releases/download/v1.0/3cx-explorer-amd64-linux-1.0
 
 2. Create config file at `/etc/3cx_exporter/config.json`.
 

@@ -22,6 +22,7 @@ func main() {
 	flag.Parse()
 
 	api, err := parseConfig(*config)
+	api.Client = &http.Client{}
 	if err != nil {
 		panic(err)
 	}
