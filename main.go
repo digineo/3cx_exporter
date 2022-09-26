@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
@@ -15,31 +16,35 @@ import (
 )
 
 func main() {
+	config := flag.String("config", "config.json", "Path to config file")
+	listen := flag.String("listen", ":9523", "Listening on")
+	logLevel := flag.String("log_level", "INFO", "Log level")
+	flag.Parse()
 
-	conf, err := parseConfig()
+	api, err := parseConfig(*config)
 	if err != nil {
 		panic(err)
 	}
-	InitLogger(conf.LogLevel)
-	api := &exporter.API{Hostname: conf.Host, Username: conf.Username, Password: conf.Password, Client: &http.Client{}}
+	InitLogger(*logLevel)
 	if err := api.Login(); err != nil {
 		Logger.Error("Citrix login error", zap.Error(err))
 	}
 	//Ragister metrics
 	prometheus.MustRegister(&exporter.Exporter{API: *api, Logger: Logger})
 	srv := &http.Server{
-		Addr: conf.AppPort,
+		Addr: *listen,
 	}
 	http.Handle("/metrics", promhttp.Handler())
 
 	go func() {
-		Logger.Info(fmt.Sprintf("Listen started on port %s", conf.AppPort))
+		Logger.Info(fmt.Sprintf("Listen started on port %s", *listen))
 		if err := srv.ListenAndServe(); err != nil {
 			Logger.Panic("Handle server error", zap.Error(err))
 		}
 	}()
 
 	// Listen for os sygnals
+
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	<-c

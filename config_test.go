@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,12 +8,11 @@ import (
 
 func TestConfig(t *testing.T) {
 	assert := assert.New(t)
-	os.Setenv("ENV", "DEV")
 
-	config, err := parseConfig()
+	config, err := parseConfig("fixtures/config.json")
 
 	assert.NoError(err)
-	assert.Equal("localhost", config.Host)
+	assert.Equal("3cx.example.com", config.Hostname)
 	assert.Equal("admin", config.Username)
-	assert.Equal("admin", config.Password)
+	assert.Equal("secret", config.Password)
 }
