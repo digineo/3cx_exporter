@@ -15,24 +15,33 @@ import (
 
 // API is the interface to 3CX
 type API struct {
-	Hostname string
-	Username string
-	Password string
-	Client   *http.Client
+	hostname string
+	username string
+	password string
+	client   *http.Client
 }
 
 // ErrAuthentication is returned on HTTP status 401
 var ErrAuthentication = errors.New("authentication failed")
 
+func (api *API) SetCreds(hostname, username, password string) error {
+	api.client = &http.Client{}
+	api.hostname = hostname
+	api.username = username
+	api.password = password
+	return api.login()
+
+}
+
 // Login creates a user session
-func (api *API) Login() error {
+func (api *API) login() error {
 	jar, _ := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
 	client := &http.Client{Jar: jar}
 
 	credentials := struct {
 		Username string
 		Password string
-	}{api.Username, api.Password}
+	}{api.username, api.password}
 
 	body, _ := json.Marshal(&credentials)
 
@@ -55,12 +64,12 @@ func (api *API) Login() error {
 		return fmt.Errorf("failed to login: %s", respBody)
 	}
 
-	api.Client = client
+	api.client = client
 	return nil
 }
 
 func (api *API) buildURI(path string) string {
-	return fmt.Sprintf("https://%s/api/%s", api.Hostname, path)
+	return fmt.Sprintf("https://%s/api/%s", api.hostname, path)
 }
 
 // getResponse does a GET request and parses the JSON response
@@ -68,7 +77,7 @@ func (api *API) getResponse(path string, response interface{}) error {
 	retried := false
 
 request:
-	resp, err := api.Client.Get(api.buildURI(path))
+	resp, err := api.client.Get(api.buildURI(path))
 	if err != nil {
 		return err
 	}
@@ -88,7 +97,7 @@ request:
 		}
 
 		// try to login again
-		err = api.Login()
+		err = api.login()
 		if err != nil {
 			return err
 		}
