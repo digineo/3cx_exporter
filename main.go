@@ -26,6 +26,7 @@ func main() {
 	logLevel := flag.String("log_level", "INFO", "Log level")
 
 	flag.Parse()
+	InitLogger(*logLevel)
 
 	//Inital citrix config and api
 	citrixConf := models.Config{ConfigPath: *config}
@@ -35,6 +36,10 @@ func main() {
 
 	if err != nil {
 		panic(err)
+	}
+
+	if err := api.SetCreds(citrixConf.Host, citrixConf.Login, citrixConf.Password); err != nil {
+		Logger.Error("Citrix login error", zap.Error(err))
 	}
 
 	// Start citrix connection checker process
@@ -47,16 +52,11 @@ func main() {
 				return
 			default:
 				statusService.CheckConnection()
+				time.Sleep(5 * time.Second)
 			}
 
 		}
 	}()
-
-	InitLogger(*logLevel)
-
-	if err := api.SetCreds(citrixConf.Host, citrixConf.Login, citrixConf.Password); err != nil {
-		Logger.Error("Citrix login error", zap.Error(err))
-	}
 
 	//Ragister prometeus metrix
 	prometheus.MustRegister(&exporter.Exporter{API: api, Logger: Logger})
