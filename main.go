@@ -13,7 +13,6 @@ import (
 	"github.com/digineo/3cx_exporter/handlers"
 	"github.com/digineo/3cx_exporter/models"
 	"github.com/digineo/3cx_exporter/services"
-	"github.com/prometheus/client_golang/prometheus"
 	"go.uber.org/zap"
 )
 
@@ -38,7 +37,7 @@ func main() {
 		panic(err)
 	}
 
-	if err := api.SetCreds(citrixConf.Host, citrixConf.Login, citrixConf.Password); err != nil {
+	if err := api.SetCreds(citrixConf.Host, citrixConf.Login, citrixConf.Password, citrixConf.SkipVerify); err != nil {
 		Logger.Error("Citrix login error", zap.Error(err))
 	}
 
@@ -57,9 +56,6 @@ func main() {
 
 		}
 	}()
-
-	//Ragister prometeus metrix
-	prometheus.MustRegister(&exporter.Exporter{API: api, Logger: Logger})
 
 	//Create and start http server
 	router := handlers.NewRouter(&statusService, &api, *config, Logger)

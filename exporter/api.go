@@ -2,6 +2,7 @@ package exporter
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -24,8 +25,12 @@ type API struct {
 // ErrAuthentication is returned on HTTP status 401
 var ErrAuthentication = errors.New("authentication failed")
 
-func (api *API) SetCreds(hostname, username, password string) error {
-	api.client = &http.Client{}
+func (api *API) SetCreds(hostname, username, password string, skipVerify bool) error {
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: skipVerify},
+	}
+	api.client = &http.Client{Transport: tr}
 	api.hostname = hostname
 	api.username = username
 	api.password = password
@@ -36,7 +41,7 @@ func (api *API) SetCreds(hostname, username, password string) error {
 // Login creates a user session
 func (api *API) login() error {
 	jar, _ := cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
-	client := &http.Client{Jar: jar}
+	api.client.Jar = jar
 
 	credentials := struct {
 		Username string
@@ -45,7 +50,7 @@ func (api *API) login() error {
 
 	body, _ := json.Marshal(&credentials)
 
-	resp, err := client.Post(api.buildURI("login"), "application/json", bytes.NewReader(body))
+	resp, err := api.client.Post(api.buildURI("login"), "application/json", bytes.NewReader(body))
 	if err != nil {
 		return err
 	}
@@ -64,7 +69,6 @@ func (api *API) login() error {
 		return fmt.Errorf("failed to login: %s", respBody)
 	}
 
-	api.client = client
 	return nil
 }
 

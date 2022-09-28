@@ -39,7 +39,7 @@ func GetConfigGetterHandler(logger *zap.Logger, configPath string) http.Handler 
 	})
 }
 
-func GetSetConfigHandler(logger *zap.Logger, configurer apiConfigurer) http.Handler {
+func GetSetConfigHandler(logger *zap.Logger, configurer configurer) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		conf := models.Config{}
 		decoder := json.NewDecoder(r.Body)
@@ -60,7 +60,7 @@ func GetSetConfigHandler(logger *zap.Logger, configurer apiConfigurer) http.Hand
 			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 			return
 		}
-		err = configurer.SetCreds(conf.Host, conf.Login, conf.Password)
+		err = configurer.SetCreds(conf.Host, conf.Login, conf.Password, true)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Header().Set("Content-Type", "application/json")

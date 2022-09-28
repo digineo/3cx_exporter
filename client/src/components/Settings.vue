@@ -1,7 +1,7 @@
 <template lang="pug">
 b-card(header="Settings")
   b-card-text
-    b-form-group(id="host-input-group" label="PBX FQDN" description="PBX hostname and port")
+    b-form-group(id="host-input-group" label="PBX FQDN" description="PBX hostname")
       b-form-input(id="host-input" v-model="hostname")
     b-form-group(id="login-input-group" label="Login" ).mt-2
       b-form-input(id="login-input" v-model="login")

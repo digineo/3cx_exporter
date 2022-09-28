@@ -23,7 +23,7 @@ func (a *AppState) CheckConnection() (appState models.AppState) {
 		appState.Connected = true
 	}
 	appState.Version = state.Version
-	appState.LicenseKey = state.Version
+	appState.LicenseKey = state.LicenseKey
 	appState.LastRequest = a.LastRequest
 	appState.RequestCount = a.RequestCount
 	return
