@@ -19,7 +19,7 @@ type configurer interface {
 }
 
 func NewRouter(st stateProvisor, api *exporter.API, configPath string, logger *zap.Logger) *mux.Router {
-	prometheus.MustRegister(&exporter.Exporter{API: *api, Logger: logger})
+	prometheus.MustRegister(&exporter.Exporter{API: api, Logger: logger})
 
 	r := mux.NewRouter()
 	reqCountMiddleware := getRequestCountMidleware(st)

@@ -41,6 +41,7 @@ func GetConfigGetterHandler(logger *zap.Logger, configPath string) http.Handler 
 
 func GetSetConfigHandler(logger *zap.Logger, configurer configurer) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
 		conf := models.Config{}
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&conf)

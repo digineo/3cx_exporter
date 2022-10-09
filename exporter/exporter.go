@@ -25,7 +25,7 @@ var (
 
 // Exporter represents a prometheus exporter
 type Exporter struct {
-	API
+	*API
 	Logger *zap.Logger
 }
 

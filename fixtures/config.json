@@ -1,5 +1,7 @@
 {
-    "Hostname": "3cx.example.com",
+    "Hostname": "pauldev.telin.com",
     "Username": "admin",
-    "Password": "secret"
+    "Password": "vQf245MXGMcJjP7bN7xZG8F",
+    "SkipVerify":true
+
 }
