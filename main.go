@@ -9,10 +9,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/digineo/3cx_exporter/exporter"
 	"github.com/digineo/3cx_exporter/handlers"
-	"github.com/digineo/3cx_exporter/models"
-	"github.com/digineo/3cx_exporter/services"
 	"go.uber.org/zap"
 )
 
@@ -20,45 +17,14 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 
 	//Parse app configuration flags
-	config := flag.String("config", "config.json", "Path to config file")
 	listen := flag.String("listen", ":9523", "Listening on")
 	logLevel := flag.String("log_level", "INFO", "Log level")
 
 	flag.Parse()
 	InitLogger(*logLevel)
 
-	//Inital citrix config and api
-	citrixConf := models.Config{ConfigPath: *config}
-	_, err := citrixConf.Get()
-
-	api := exporter.API{}
-
-	if err != nil {
-		panic(err)
-	}
-
-	if err := api.SetCreds(citrixConf.Host, citrixConf.Login, citrixConf.Password, citrixConf.SkipVerify); err != nil {
-		Logger.Error("Citrix login error", zap.Error(err))
-	}
-
-	// Start citrix connection checker process
-	statusService := services.AppState{Status: &api}
-
-	go func() {
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			default:
-				statusService.CheckConnection()
-				time.Sleep(5 * time.Second)
-			}
-
-		}
-	}()
-
 	//Create and start http server
-	router := handlers.NewRouter(&statusService, &api, *config, Logger)
+	router := handlers.NewRouter()
 	srv := &http.Server{
 		Addr:    *listen,
 		Handler: router,
