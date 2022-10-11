@@ -27,9 +27,10 @@ func main() {
 
 	flag.Parse()
 	InitLogger(*logLevel)
+	store := db.New(*dbConnectionString, Logger)
 
 	//Create and start http server
-	router := handlers.NewRouter()
+	router := handlers.NewRouter(store)
 	srv := &http.Server{
 		Addr:    *listen,
 		Handler: router,
@@ -43,7 +44,6 @@ func main() {
 	}()
 
 	//Create monitoring job
-	store := db.New(*dbConnectionString, Logger)
 	monitor := services.NewMonitor(store, services.NewStatusGetter, Logger)
 	go func() {
 		for {
