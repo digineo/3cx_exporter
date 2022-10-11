@@ -42,6 +42,7 @@ type SystemStatus struct {
 	ResellerName              string
 	LicenseKey                string
 	ProductCode               string
+	WebMeetingBestMCU         int `json:"WebMeetingBestMCU"`
 }
 
 // SystemStatus fetches the system status
@@ -63,7 +64,12 @@ func (api *API) SystemStatus() (models.InstanceState, error) {
 	status.MaintenceUntil = *response.MaintenanceExpiresAt
 	status.ServiceCPU = fmt.Sprint(response.CPUUsage)
 	status.ServiceMemory = fmt.Sprint(response.MemoryUsage)
-	status.ServiceStatus = 
+	if response.WebMeetingBestMCU == 0 {
+		status.ServiceStatus = "Auto"
+	} else {
+		status.ServiceStatus = fmt.Sprint(response.WebMeetingBestMCU)
+	}
 	status.TruncRegistred = fmt.Sprint(response.TrunksRegistered)
+	return status, nil
 
 }
