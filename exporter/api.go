@@ -16,10 +16,11 @@ import (
 
 // API is the interface to 3CX
 type API struct {
-	hostname string
-	username string
-	password string
-	client   *http.Client
+	hostname   string
+	username   string
+	password   string
+	instanceId int
+	client     *http.Client
 }
 
 // ErrAuthentication is returned on HTTP status 401
@@ -114,8 +115,8 @@ request:
 	}
 }
 
-func New3CXApi(hostname, username, password string, skipVerify bool) (*API, error) {
-	api := &API{}
+func New3CXApi(hostname, username, password string, skipVerify bool, instanceId int) (*API, error) {
+	api := &API{instanceId: instanceId}
 	err := api.setCreds(hostname, username, password, skipVerify)
 	return api, err
 }

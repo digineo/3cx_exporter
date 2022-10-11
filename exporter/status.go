@@ -1,7 +1,10 @@
 package exporter
 
 import (
+	"fmt"
 	"time"
+
+	"github.com/digineo/3cx_exporter/models"
 )
 
 // SystemStatus represents the SystemStatus response
@@ -42,7 +45,24 @@ type SystemStatus struct {
 }
 
 // SystemStatus fetches the system status
-func (api *API) SystemStatus() (SystemStatus, error) {
+func (api *API) SystemStatus() (models.InstanceState, error) {
 	response := SystemStatus{}
-	return response, api.getResponse("SystemStatus", &response)
+	status := models.InstanceState{}
+	err := api.getResponse("SystemStatus", &response)
+	if err != nil {
+		return status, err
+	}
+	status.BlacklistSize = response.BlacklistedIPCount
+	status.CallsActive = response.CallsActive
+	status.CallsLimit = response.MaxSimCalls
+	status.CreatedAt = time.Now()
+	status.ExtensionsRegistred = response.ExtensionsRegistered
+	status.ExtensionsTotal = response.ExtensionsTotal
+	status.InstanceId = api.instanceId
+	status.LastBackUp = *response.LastBackupDateTime
+	status.MaintenceUntil = *response.MaintenanceExpiresAt
+	status.ServiceCPU = fmt.Sprint(response.CPUUsage)
+	status.ServiceMemory = fmt.Sprint(response.MemoryUsage)
+	status.TruncRegistred = fmt.Sprint(response.TrunksRegistered)
+
 }
