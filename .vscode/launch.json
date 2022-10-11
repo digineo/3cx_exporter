@@ -15,7 +15,7 @@
           "ENV": "DEV"
         },
         "showLog": true,
-        "args": ["-config","fixtures/config.json","-listen",":8081","-log_level","DEBUG"]
+        "args": ["-listen",":8081","-log_level","DEBUG","-db_connection","root:1234@/sys?parseTime=true"]
       },
       {
         "name": "DB TEST",

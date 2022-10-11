@@ -62,7 +62,7 @@ func TestDB(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	defer testDbClose(db)
+	//defer testDbClose(db)
 	store := Store{db: db}
 	instance, err := store.GetInstances()
 	if err != nil {
