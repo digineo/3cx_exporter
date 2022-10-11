@@ -63,6 +63,7 @@ func (api *API) SystemStatus() (models.InstanceState, error) {
 	status.MaintenceUntil = *response.MaintenanceExpiresAt
 	status.ServiceCPU = fmt.Sprint(response.CPUUsage)
 	status.ServiceMemory = fmt.Sprint(response.MemoryUsage)
+	status.ServiceStatus = 
 	status.TruncRegistred = fmt.Sprint(response.TrunksRegistered)
 
 }
