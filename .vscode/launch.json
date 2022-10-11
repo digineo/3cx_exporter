@@ -17,5 +17,19 @@
         "showLog": true,
         "args": ["-config","fixtures/config.json","-listen",":8081","-log_level","DEBUG"]
       },
+      {
+        "name": "DB TEST",
+        "type": "go",
+        "request": "launch",
+        "mode": "test",
+        "program": "${fileDirname}",
+        "env": {
+          "TEST_DB": "root:1234@/sys?parseTime=true",
+        },
+        "showLog": true,
+        "args":[
+          "db_test.go"
+        ]
+      },
     ]
 }
