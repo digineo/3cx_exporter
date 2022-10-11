@@ -25,7 +25,7 @@ type API struct {
 // ErrAuthentication is returned on HTTP status 401
 var ErrAuthentication = errors.New("authentication failed")
 
-func (api *API) SetCreds(hostname, username, password string, skipVerify bool) error {
+func (api *API) setCreds(hostname, username, password string, skipVerify bool) error {
 
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: skipVerify},
@@ -112,4 +112,10 @@ request:
 	default:
 		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
+}
+
+func New3CXApi(hostname, username, password string, skipVerify bool) (*API, error) {
+	api := &API{}
+	err := api.setCreds(hostname, username, password, skipVerify)
+	return api, err
 }
