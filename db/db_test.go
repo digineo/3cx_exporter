@@ -86,8 +86,6 @@ func TestDB(t *testing.T) {
 		CallsLimit:          10,
 		ExtensionsTotal:     100,
 		ExtensionsRegistred: 10,
-		LastBackUp:          time.Now(),
-		MaintenceUntil:      time.Now(),
 		ServiceStatus:       "OK",
 		ServiceCPU:          "10",
 		ServiceMemory:       "8",

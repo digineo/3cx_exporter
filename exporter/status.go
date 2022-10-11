@@ -60,8 +60,8 @@ func (api *API) SystemStatus() (models.InstanceState, error) {
 	status.ExtensionsRegistred = response.ExtensionsRegistered
 	status.ExtensionsTotal = response.ExtensionsTotal
 	status.InstanceId = api.instanceId
-	status.LastBackUp = *response.LastBackupDateTime
-	status.MaintenceUntil = *response.MaintenanceExpiresAt
+	status.LastBackUp = response.LastBackupDateTime
+	status.MaintenceUntil = response.MaintenanceExpiresAt
 	status.ServiceCPU = fmt.Sprint(response.CPUUsage)
 	status.ServiceMemory = fmt.Sprint(response.MemoryUsage)
 	if response.WebMeetingBestMCU == 0 {

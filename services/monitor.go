@@ -24,6 +24,7 @@ func (p *Processor) ProcessInstances(instances []models.Instance) {
 		p.logger.Debug(fmt.Sprintf("Instance ID %v processing started", instance.InstanceId))
 		wg.Add(1)
 		go func(inst models.Instance) {
+			defer wg.Done()
 			client, err := p.statusGetter(inst)
 			if err != nil {
 				p.logger.Error(fmt.Sprintf("Instance ID %v processing error. Could not initialize client", inst.InstanceId), zap.Error(err))

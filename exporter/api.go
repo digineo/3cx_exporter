@@ -20,6 +20,7 @@ type API struct {
 	username   string
 	password   string
 	instanceId int
+	port       string
 	client     *http.Client
 }
 
@@ -74,7 +75,7 @@ func (api *API) login() error {
 }
 
 func (api *API) buildURI(path string) string {
-	return fmt.Sprintf("https://%s/api/%s", api.hostname, path)
+	return fmt.Sprintf("https://%s:%s/api/%s", api.hostname, api.port, path)
 }
 
 // getResponse does a GET request and parses the JSON response
@@ -115,8 +116,8 @@ request:
 	}
 }
 
-func New3CXApi(hostname, username, password string, skipVerify bool, instanceId int) (*API, error) {
-	api := &API{instanceId: instanceId}
+func New3CXApi(hostname, username, password, port string, skipVerify bool, instanceId int) (*API, error) {
+	api := &API{instanceId: instanceId, port: port}
 	err := api.setCreds(hostname, username, password, skipVerify)
 	return api, err
 }
