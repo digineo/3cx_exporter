@@ -43,3 +43,11 @@ func (p *Processor) ProcessInstances(instances []models.Instance) {
 	wg.Wait()
 
 }
+
+func NewMonitor(saver statusSaver, getter StatusGetterFactory, logger *zap.Logger) *Processor {
+	return &Processor{
+		saver:        saver,
+		statusGetter: getter,
+		logger:       logger,
+	}
+}
