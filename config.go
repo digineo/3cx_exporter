@@ -2,17 +2,22 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
-
-	"github.com/digineo/3cx_exporter/exporter"
+	"os"
 )
 
-func parseConfig(path string) (*exporter.API, error) {
-	data, err := ioutil.ReadFile(path)
+type Config struct {
+	Hostname string `json:"Hostname"`
+	Username string `json:"Username"`
+	Password string `json:"Password"`
+}
+
+func parseConfig(path string) (Config, error) {
+	data, err := os.ReadFile(path)
 	if err != nil {
-		return nil, err
+		return Config{}, err
 	}
 
-	api := exporter.API{}
-	return &api, json.Unmarshal(data, &api)
+	var config Config
+	err = json.Unmarshal(data, &config)
+	return config, err
 }

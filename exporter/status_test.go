@@ -2,7 +2,7 @@ package exporter
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -11,7 +11,7 @@ import (
 func TestStatus(t *testing.T) {
 	require := require.New(t)
 
-	data, err := ioutil.ReadFile("fixtures/SystemStatus.json")
+	data, err := os.ReadFile("fixtures/SystemStatus.json")
 	require.NoError(err)
 
 	status := SystemStatus{}

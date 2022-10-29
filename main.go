@@ -11,15 +11,16 @@ import (
 )
 
 func main() {
-	config := flag.String("config", "config.json", "Path to config file")
+	configFile := flag.String("config", "config.json", "Path to config file")
 	listen := flag.String("listen", ":9523", "Listening on")
 	flag.Parse()
 
-	api, err := parseConfig(*config)
+	config, err := parseConfig(*configFile)
 	checkErr(err)
+	api := exporter.NewAPI(config.Hostname, config.Username, config.Password)
 	checkErr(api.Login())
 
-	prometheus.MustRegister(&exporter.Exporter{API: *api})
+	prometheus.MustRegister(&exporter.Exporter{API: api})
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(*listen, nil))
 }

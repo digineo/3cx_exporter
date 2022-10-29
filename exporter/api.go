@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/cookiejar"
 	"strings"
@@ -15,10 +15,18 @@ import (
 
 // API is the interface to 3CX
 type API struct {
-	Hostname string
-	Username string
-	Password string
+	hostname string
+	username string
+	password string
 	client   *http.Client
+}
+
+func NewAPI(hostname, username, password string) API {
+	return API{
+		hostname: hostname,
+		username: username,
+		password: password,
+	}
 }
 
 // ErrAuthentication is returned on HTTP status 401
@@ -32,7 +40,7 @@ func (api *API) Login() error {
 	credentials := struct {
 		Username string
 		Password string
-	}{api.Username, api.Password}
+	}{api.username, api.password}
 
 	body, _ := json.Marshal(&credentials)
 
@@ -46,7 +54,7 @@ func (api *API) Login() error {
 		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
@@ -60,7 +68,7 @@ func (api *API) Login() error {
 }
 
 func (api *API) buildURI(path string) string {
-	return fmt.Sprintf("https://%s/api/%s", api.Hostname, path)
+	return fmt.Sprintf("https://%s/api/%s", api.hostname, path)
 }
 
 // getResponse does a GET request and parses the JSON response

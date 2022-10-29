@@ -2,7 +2,7 @@ package exporter
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,7 +13,7 @@ func TestServiceList(t *testing.T) {
 	assert := assert.New(t)
 	require := require.New(t)
 
-	data, err := ioutil.ReadFile("fixtures/ServiceList.json")
+	data, err := os.ReadFile("fixtures/ServiceList.json")
 	require.NoError(err)
 
 	serviceList := ServiceList{}
