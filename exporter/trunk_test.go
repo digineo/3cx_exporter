@@ -2,7 +2,7 @@ package exporter
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,7 +13,7 @@ func TestTrunks(t *testing.T) {
 	assert := assert.New(t)
 	require := require.New(t)
 
-	data, err := ioutil.ReadFile("fixtures/TrunkList.json")
+	data, err := os.ReadFile("fixtures/TrunkList.json")
 	require.NoError(err)
 
 	response := struct {
